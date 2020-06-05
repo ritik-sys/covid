@@ -1,0 +1,48 @@
+body{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color:#f8f9fa;
+  font-family: "Ubuntu";
+}
+#navbar{
+  font-family: "Ubuntu";
+}
+#navbar{
+  background-color:#f8f9fa;
+  webkit-box-shadow: 0 8px 6px -6px #999;
+  -moz-box-shadow: 0 8px 6px -6px #999;
+  box-shadow: 0 8px 6px -6px #999;
+  text-align: center;
+}
+#content{
+
+  text-align: center;
+  font-family: Ubuntu;
+}
+#content a{
+  text-decoration: none;
+}
+.names{
+
+}
+h1{
+  background-color: black;
+  color: white;
+}
+.devs{
+  font-size: 3rem;
+  font-weight: bold;
+  background-color:black;
+  color: white;
+  padding: 5px;
+}
+ul{
+  text-align: center;
+
+}
+@media (max-width:700px){
+  .top-title{
+    font-size: 1.5rem;
+  }
+}

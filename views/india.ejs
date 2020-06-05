@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <link rel="icon" href="https://img.icons8.com/color/48/000000/coronavirus.png">
+  <title>Covid-19 Tracker</title>
+  <!-- css  -->
+  <link rel="stylesheet" href="/css/style_india.css">
+  <!-- googlefonts cdn -->
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+  <!-- bootstrapcdn -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <!-- font Awesome cdn -->
+  <script src="https://kit.fontawesome.com/d2fbf043df.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js" charset="utf-8"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+</head>
+
+<body>
+<button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+  <section id="navbar">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/" style="font-size:2rem;"><div class="top-title">C<i class="fas fa-virus"></i>VID-19 Tracker</div></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/"><i class="fas fa-chart-line"></i>Dashboard</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/india"><i class="fas fa-home"></i>India</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/about"><i class="fas fa-user-friends"></i>About Us</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </section>
+
+
+
+
+  <section id="top">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-8 col-sm-12">
+          <span>
+            <h3>Coronavirus cases - India</h3>
+          </span>
+          <p><%=india_data.lastOriginUpdate%></p>
+          <div class="row">
+            <div class="col-lg-4 col-md-4 sm-12">
+              <div class="card shadow" style="max-width: 18rem;border-left: 5px solid #4e73df;">
+                <div class="card-title">
+                  <strong>CONFIRMED</strong>
+                </div>
+                <%=india_data[0].confirmed%>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-4 sm-12">
+              <div class="card shadow" style="max-width: 18rem;border-left: 5px solid #1cc88a;">
+                <div class="card-title" >
+                  <strong>RECOVERED</strong>
+                </div>
+                <%=india_data[0].recovered%>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-4 sm-12">
+              <div class="card shadow" style="max-width: 18rem;border-left: 5px solid #e74a3b;">
+                <div class="card-title">
+                  <strong>DEATHS</strong>
+                </div>
+                <%=india_data[0].deaths%>
+              </div>
+            </div>
+          </div>
+          <div class="row sample-box" style="margin:5% 0;">
+            <div class="col">
+              <div class="card shadow">
+                <div class="card-body">
+                <strong><%= india_data_tested[india_data_tested.length-1].totalsamplestested %></strong> samples have been tested as of <%=india_data_tested[india_data_tested.length-1].updatetimestamp%>.
+
+                <div class="button-updates" style="margin-top:3%">
+                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target=".bd-example-modal-lg">COVID-19 LATEST UPDATES<i class="fas fa-rss" style="margin:10px;"></i></button>
+                  <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                      <div class="modal-content" style="background-color:#f8f9fa;">
+                        <h3 style="text-align:center;margin-top:3%">UPDATES</h3>
+                        <ul style="text-align:left;margin-top:2%;">
+                          <%for(var i=0;i<=14;i++){%>
+                            <strong><li><%=india_updates[i].update%></li></strong>
+                            <p style="font-size:12px;color:grey;"><%=(new Date(india_updates[i].timestamp*1000).toUTCString())%></p>
+                            <hr>
+                          <%}%>
+                        </ul>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-12">
+        <h4><center>Effect Of Covid-19 on INDIA</center></h4>
+        <canvas id="myChart" class="shadow" width="300" height="300"></canvas>
+      </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+<section style="margin:3% 0;">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <h3 style="text-align:center;margin-top:5%;">State Wise Count</h3>
+        <p style="text-align:center;">Click On The  <i class="fas fa-plus-circle" style="color:red;"></i>   to Get Respective District-Wise Data</p>
+        <div class="card" style="width:auto;height:600px;">
+            <table class="table table-responsive table-striped">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col">State</th>
+                  <th scope="col">Confirmed</th>
+                  <th scope="col">Active_Cases</th>
+                  <th scope="col">Recovered</th>
+                  <th scope="col">Deaths</th>
+                </tr>
+              </thead>
+              <tbody>
+                <%for(var i=1;i<32;i++){%>
+                  <form class="" action="/india-stats/district" method="post">
+                  <tr>
+                    <td><button onclick="myfunction(event)" id="<%=district[i].statecode%>" name="<%=district[i].state%>" type="submit" class="btn btn-outline-danger" data-toggle="modal" data-target="#exampleModal" data-whatever="<%=district[i].statecode%>" style="border-radius:50%;margin-left:2px;">+</button></td>
+                    <td><%=district[i].state%></td>
+                    <td><%=district[i].confirmed%></td>
+                    <td><%=district[i].active%></td>
+                    <td><%=district[i].recovered%></td>
+                    <td><%=district[i].deaths%></td>
+                  </tr>
+                  </form>
+              <%  }%>
+              </tbody>
+            </table>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <h3 style="text-align:center;margin-top:5%;">Most Affected States</h3>
+        <p style="text-align:center;">Click On any Name on Pie Chart To make it Disappear</p>
+        <div class="card" style="width: auto;border-left:5px solid #e74a3b;">
+            <canvas id="myChart8" height="600"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+
+
+<section id="top10" style="margin:4% 0">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <section id="top10">
+              <center><h3 style="padding-bottom:2%;">Top 10 states Affected By COVID-19</h3></center>
+            <div class="card shadow" style="border-left:5px solid #e74a3b;">
+              <canvas id="myChart3" width="300" height="300"></canvas>
+            </div>
+        </section>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <section id="timeline"  style="margin:4% 0">
+          <center><h3 style="padding-bottom:2%;">Timeline of Cases in India</h3></center>
+        <div class="card shadow" style="border-left:5px solid rgba(255, 206, 86, 0.6);" >
+          <canvas id="myChart4" width="300" height="300"></canvas>
+        </div>
+          </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="PositiveVsTested">
+  <div class="container">
+    <center><h3 style="padding:2%;">Total Positive Cases VS Total Sample Tested</h3></center>
+    <div class="card shadow" style="border-left:5px solid #1cc88a;">
+      <canvas id="myChart5" width="400" height="600"></canvas>
+    </div>
+  </div>
+</section>
+
+
+<div class="attribution">
+  <p style="padding-top:10px">Made with ❤ by <strong>SteveRogers</strong> and <strong>Ritik</strong></p>
+</div>
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0" ></script>
+  <script>
+    var ctx = document.getElementById("myChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ["Confirmed","Recovered","Deaths"],
+      datasets: [{
+        backgroundColor: [
+         'rgba(255, 206, 86, 0.6)',
+         'rgba(75, 192, 192, 0.6)',
+         'rgba(255, 99, 132, 0.6)'
+        ],
+        data: [<%=india_data[0].confirmed%>,<%=india_data[0].recovered%>,<%=india_data[0].deaths%>,]
+      }]
+    }
+  });
+  </script>
+
+  <script>
+    var ctx = document.getElementById("myChart3").getContext('2d');
+    var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [<%for(var i=1;i<11;i++){%>
+          "<%=india_data[i].state%>",
+          <%}%>],
+        datasets: [{
+            label: 'Confirmed', // Name the series
+            data: [<%for(var i=1;i<11;i++){%>
+              <%=india_data[i].confirmed%>,
+            <%}%>
+            ], // Specify the data values array
+            fill: false,
+            borderColor:    'rgba(255, 159, 64, 0.6)', // Add custom color border (Line)
+            backgroundColor:   'rgba(255, 159, 64, 0.6)', // Add custom color background (Points and Fill)
+            borderWidth: 1 // Specify bar border width
+        },
+        {
+          label: 'Recovered', // Name the series
+          data: [<%for(var i=1;i<11;i++){%>
+            <%=india_data[i].recovered%>,
+          <%}%>], // Specify the data values arraya
+          fill: false,
+          borderColor:   'rgba(75, 192, 192, 0.6)', // Add custom color border (Line)
+          backgroundColor:    'rgba(75, 192, 192, 0.6)',// Add custom color background (Points and Fill)
+          borderWidth: 1 // Specify bar border width
+        },
+        {
+          label: 'Deaths', // Name the series
+          data: [<%for(var i=1;i<11;i++){%>
+            <%=india_data[i].deaths%>,
+          <%}%>], // Specify the data values array
+          fill: false,
+          borderColor: 'rgba(255, 99, 132, 0.6)', // Add custom color border (Line)
+          backgroundColor:  'rgba(255, 99, 132, 0.6)', // Add custom color background (Points and Fill)
+          borderWidth: 1 // Specify bar border width
+        }]
+    },
+    options: {
+      responsive: true, // Instruct chart js to respond nicely.
+      maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+    }
+    });
+  </script>
+
+  <script>
+    var ctx = document.getElementById("myChart4").getContext('2d');
+    var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [<%for(var i=1;i<india_data_timeline.length-1;i++){%>
+          "<%=india_data_timeline[i].date%>",
+          <%}%>],
+        datasets: [{
+            label: 'Confirmed', // Name the series
+            data: [<%for(var i=1;i<india_data_timeline.length-1;i++){%>
+              <%=india_data_timeline[i].totalconfirmed%>,
+            <%}%>
+            ], // Specify the data values array
+            fill: false,
+            borderColor: 'rgba(255, 99, 132, 0.6)', // Add custom color border (Line)
+            backgroundColor: 'rgba(255, 99, 132, 0.6)', // Add custom color background (Points and Fill)
+            borderWidth: 0.3 // Specify bar border width
+        },
+        {
+          label: 'Recovered', // Name the series
+          data: [<%for(var i=1;i<india_data_timeline.length-1;i++){%>
+            <%=india_data_timeline[i].totalrecovered%>,
+          <%}%>], // Specify the data values arraya
+          fill: false,
+          borderColor: '#4CAF50', // Add custom color border (Line)
+          backgroundColor: '#4CAF50', // Add custom color background (Points and Fill)
+          borderWidth: 1 // Specify bar border width
+        }
+        ]
+    },
+    options: {
+      responsive: true, // Instruct chart js to respond nicely.
+      maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+    }
+    });
+  </script>
+
+
+  <script >
+  new Chart(document.getElementById("myChart5"), {
+      type: 'bar',
+      data: {
+        labels: [<%for(var i=0;i<india_data_tested.length-1;i++){%>
+          <%if(india_data_tested[i].totalpositivecases!=""&&india_data_tested[i].totalindividualstested!=""){%>
+          "<%=india_data_tested[i].updatetimestamp%>",
+          <%}%>
+          <%}%>
+        ],
+        datasets: [{
+            label: "Total Positive Cases",
+            type: "line",
+            borderColor: "red",
+            backgroundColor: 'white',
+            data: [
+              <%for(var i=0;i<india_data_tested.length-1;i++){%>
+                  <%if(india_data_tested[i].totalpositivecases!=""&&india_data_tested[i].totalindividualstested!=""){%>
+                <%=india_data_tested[i].totalpositivecases%>,
+                <%}%>
+                <%}%>
+            ],
+           fill: false
+
+          }, {
+            label: "Total Sample Tested",
+            type: "bar",
+            backgroundColor:    '#7d4199',
+            data: [<%for(var i=0;i<india_data_tested.length-1;i++){%>
+              <%if(india_data_tested[i].totalpositivecases!=""&&india_data_tested[i].totalindividualstested!=""){%>
+              <%=india_data_tested[i].totalindividualstested%>,
+              <%}%>
+              <%}%>],
+          }
+        ]
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'Total Positive Cases VS Total Sample Tested'
+        },
+        legend: { display: true, },
+         maintainAspectRatio: false,
+        layout: {
+          padding: {
+            left: 10,
+            right: 10
+          }
+        }
+      }
+  });
+
+   </script>
+   <script>
+     function myfunction(event){
+       window.value=event.target.name;
+       
+     }
+   </script>
+   <script>
+   var ctx = document.getElementById('myChart8');
+   var myChart = new Chart(ctx, {
+       type: 'doughnut',
+       data: {
+           labels: [<%for(var i=1;i<11;i++){%>
+             "<%=district[i].state%>",
+           <%}%>
+           ],
+           datasets: [{
+               label: '# of Votes',
+               data: [<%for(var i=1;i<11;i++){%>
+               <%=district[i].confirmed%>,
+             <%}%>
+               ],
+               backgroundColor: [
+                   'rgba(255, 99, 132, 0.6)',
+                   'rgba(54, 162, 235, 0.6)',
+                   'rgba(255, 206, 86, 0.6)',
+                   'rgba(75, 192, 192, 0.6)',
+                   'rgba(153, 102, 255, 0.6)',
+                   'rgba(255, 159, 64, 0.6)',
+                   '#996caf',
+                   '#ce5c90',
+                   '#7d4199',
+                   '#63c0ec'
+               ],
+               borderColor: [
+                   '#ffffff',
+                   '#ffffff',
+                   '#ffffff',
+                   '#ffffff',
+                   '#ffffff',
+                   '#ffffff',
+                   '#ffffff',
+                   '#ffffff',
+                   '#ffffff',
+                   '#ffffff'
+               ],
+               borderWidth: 1
+           }]
+       },
+       options: {
+           scales: {
+               yAxes: [{
+                   ticks: {
+                       beginAtZero: true
+                   }
+               }]
+           }
+       }
+   });
+   </script>
+
+   <script>
+      //Get the button:
+      mybutton = document.getElementById("myBtn");
+
+      // When the user scrolls down 20px from the top of the document, show the button
+      window.onscroll = function() {scrollFunction()};
+
+      function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+          mybutton.style.display = "block";
+        } else {
+          mybutton.style.display = "none";
+        }
+      }
+
+      // When the user clicks on the button, scroll to the top of the document
+      function topFunction() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+      }
+      </script>
+
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+
+</html>
